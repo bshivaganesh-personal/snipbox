@@ -3,6 +3,18 @@
 from rest_framework import serializers
 from .models import Snippet, Tag
 
+class TagSerializer(serializers.ModelSerializer):
+    """Serializer for the Tag model."""
+
+    snippet_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Tag
+        fields = ["id", "title", "snippet_count"]
+
+    def get_snippet_count(self, obj):
+        return obj.snippets.count()
+
 class SnippetDetailSerializer(serializers.ModelSerializer):
     """Serializer for snippet detail, create and update."""
 
