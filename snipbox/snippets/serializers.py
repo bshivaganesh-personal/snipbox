@@ -52,7 +52,8 @@ class SnippetDetailSerializer(serializers.ModelSerializer):
         return tag_objects
 
     def create(self, validated_data):
+        tags = validated_data.pop('tags', [])
         snippet = Snippet.objects.create(**validated_data)
-        tags = self._get_or_create_tags(tag_titles)
+        tags = self._get_or_create_tags(tags)
         snippet.tags.set(tags)
         return snippet
