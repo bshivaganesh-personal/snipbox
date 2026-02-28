@@ -75,3 +75,12 @@ class SnippetDetailSerializer(serializers.ModelSerializer):
             tags = self._get_or_create_tags(tag_titles)
             instance.tags.set(tags)
         return instance
+
+class TagDetailSerializer(serializers.ModelSerializer):
+    """Serializer for tag detail with linked snippets."""
+
+    snippets = SnippetListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Tag
+        fields = ["id", "title", "snippets"]

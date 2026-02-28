@@ -5,9 +5,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from .models import Snippet
+from .models import Snippet, Tag
 from .serializers import (
-    SnippetDetailSerializer, SnippetListSerializer,
+    SnippetDetailSerializer, SnippetListSerializer, TagSerializer, TagDetailSerializer,
 )
 
 class SnippetOverviewView(APIView):
@@ -87,3 +87,22 @@ class SnippetDeleteView(generics.DestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class TagListView(generics.ListAPIView):
+    """
+    GET: List all available tags.
+    """
+
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class TagDetailView(generics.RetrieveAPIView):
+    """
+    GET: Retrieve a tag and all snippets linked to it.
+    """
+
+    queryset = Tag.objects.all()
+    serializer_class = TagDetailSerializer
+    permission_classes = [IsAuthenticated]

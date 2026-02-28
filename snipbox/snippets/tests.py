@@ -56,3 +56,26 @@ class SnippetAPITests(TestCase):
         self.assertEqual(response.status_code, 204)
         with self.assertRaises(Snippet.DoesNotExist):
             Snippet.objects.get(pk=self.snippet.pk)
+
+class TagAPITests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="test@123",
+            email="test@test.com",
+        )
+        self.tag1 = Tag.objects.create(title="python")
+        self.tag2 = Tag.objects.create(title="django")
+
+    def test_get_tag_list(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get("/api/tags/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
+
+    def test_get_tag_detail(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(f"/api/tags/{self.tag1.pk}/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["title"], self.tag1.title)
