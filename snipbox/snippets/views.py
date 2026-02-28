@@ -20,3 +20,15 @@ class SnippetCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
+
+class SnippetDetailView(generics.RetrieveAPIView):
+    """
+    GET: Retrieve a single snippet by ID.
+    Only the snippet creator can view it.
+    """
+
+    serializer_class = SnippetDetailSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Snippet.objects.filter(created_by=self.request.user)
