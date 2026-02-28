@@ -2,11 +2,11 @@
 
 from django.urls import path
 from .views import (
-    SnippetOverviewView,
     SnippetCreateView,
     SnippetDetailView,
     SnippetUpdateView,
     SnippetDeleteView,
+    SnippetOverviewView,
 )
 
 urlpatterns = [

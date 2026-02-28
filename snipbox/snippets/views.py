@@ -3,10 +3,11 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 from .models import Snippet
 from .serializers import (
-    SnippetDetailSerializer,
+    SnippetDetailSerializer, SnippetListSerializer,
 )
 
 class SnippetOverviewView(APIView):
@@ -18,7 +19,7 @@ class SnippetOverviewView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        snippets = Snippet.objects.all()
+        snippets = Snippet.objects.filter(created_by=request.user)
         total_count = snippets.count()
         serializer = SnippetListSerializer(
             snippets, many=True, context={"request": request}

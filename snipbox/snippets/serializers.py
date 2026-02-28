@@ -19,7 +19,6 @@ class SnippetListSerializer(serializers.HyperlinkedModelSerializer):
     """Serializer for listing snippets with a hyperlink to detail view."""
 
     url = serializers.HyperlinkedIdentityField(view_name="snippet-detail")
-
     class Meta:
         model = Snippet
         fields = ["id", "title", "url"]
