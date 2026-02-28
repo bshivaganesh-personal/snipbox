@@ -15,6 +15,15 @@ class TagSerializer(serializers.ModelSerializer):
     def get_snippet_count(self, obj):
         return obj.snippets.count()
 
+class SnippetListSerializer(serializers.HyperlinkedModelSerializer):
+    """Serializer for listing snippets with a hyperlink to detail view."""
+
+    url = serializers.HyperlinkedIdentityField(view_name="snippet-detail")
+
+    class Meta:
+        model = Snippet
+        fields = ["id", "title", "url"]
+
 class SnippetDetailSerializer(serializers.ModelSerializer):
     """Serializer for snippet detail, create and update."""
 

@@ -42,3 +42,10 @@ class SnippetAPITests(TestCase):
         self.snippet.refresh_from_db()
         self.assertEqual(self.snippet.title, updated_data["title"])
         self.assertEqual(self.snippet.note, updated_data["note"])
+
+    def test_delete_snippet(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.delete(f"/api/snippets/{self.snippet.pk}/delete/")
+        self.assertEqual(response.status_code, 204)
+        with self.assertRaises(Snippet.DoesNotExist):
+            Snippet.objects.get(pk=self.snippet.pk)

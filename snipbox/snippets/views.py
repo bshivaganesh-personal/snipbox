@@ -3,7 +3,6 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 
 from .models import Snippet
 from .serializers import (
@@ -55,11 +54,12 @@ class SnippetUpdateView(generics.UpdateAPIView):
 
 class SnippetDeleteView(generics.DestroyAPIView):
     """
-    DELETE: Delete a snippet. Returns the updated list of remaining snippets.
+    DELETE: Delete a snippet by ID.
     Only the snippet creator can delete it.
     """
 
     permission_classes = [IsAuthenticated]
+    serializer_class = SnippetDetailSerializer
 
     def get_queryset(self):
         return Snippet.objects.filter(created_by=self.request.user)
@@ -67,11 +67,4 @@ class SnippetDeleteView(generics.DestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        snippets = Snippet.objects.all()
-        serializer = SnippetListSerializer(
-            snippets, many=True, context={"request": request}
-        )
-        return Response(
-            {"total_snippets": snippets.count(), "snippets": serializer.data},
-            status=status.HTTP_200_OK,
-        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
