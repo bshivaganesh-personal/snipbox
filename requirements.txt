@@ -1,12 +1,10 @@
-# Dev environment
-pip
-autopep8
-
-# App
 asgiref==3.7.2
+autopep8==2.3.2
 Django==5.0.13
-sqlparse==0.4.4
-typing_extensions==4.9.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.0
+pycodestyle==2.14.0
 PyJWT==2.8.0
+pytz==2025.2
+sqlparse==0.4.4
+typing_extensions==4.9.0
