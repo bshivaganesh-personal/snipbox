@@ -9,6 +9,24 @@ from .serializers import (
     SnippetDetailSerializer,
 )
 
+class SnippetOverviewView(APIView):
+    """
+    GET: Returns total count of snippets and a list of all snippets
+    with hyperlinks to their detail endpoints.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        snippets = Snippet.objects.all()
+        total_count = snippets.count()
+        serializer = SnippetListSerializer(
+            snippets, many=True, context={"request": request}
+        )
+        return Response(
+            {"total_snippets": total_count, "snippets": serializer.data}
+        )
+
 class SnippetCreateView(generics.CreateAPIView):
     """
     POST: Create a new snippet. Tags are matched by title before creating new ones.
