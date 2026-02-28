@@ -52,3 +52,26 @@ class SnippetUpdateView(generics.UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+class SnippetDeleteView(generics.DestroyAPIView):
+    """
+    DELETE: Delete a snippet. Returns the updated list of remaining snippets.
+    Only the snippet creator can delete it.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Snippet.objects.filter(created_by=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        snippets = Snippet.objects.all()
+        serializer = SnippetListSerializer(
+            snippets, many=True, context={"request": request}
+        )
+        return Response(
+            {"total_snippets": snippets.count(), "snippets": serializer.data},
+            status=status.HTTP_200_OK,
+        )
