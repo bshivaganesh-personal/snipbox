@@ -27,3 +27,18 @@ class SnippetAPITests(TestCase):
         response = self.client.get(f"/api/snippets/{self.snippet.pk}/")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["title"], self.snippet.title)
+
+    def test_update_snippet(self):
+        self.client.force_authenticate(user=self.user)
+        updated_data = {
+            "title": "Updated Snippet Title",
+            "note": "This snippet has been updated.",
+            "tags": ["python", "rest-framework"],
+        }
+        response = self.client.put(
+            f"/api/snippets/{self.snippet.pk}/update/", updated_data, format="json"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.snippet.refresh_from_db()
+        self.assertEqual(self.snippet.title, updated_data["title"])
+        self.assertEqual(self.snippet.note, updated_data["note"])

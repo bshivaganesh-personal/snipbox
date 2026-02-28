@@ -32,3 +32,23 @@ class SnippetDetailView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return Snippet.objects.filter(created_by=self.request.user)
+
+class SnippetUpdateView(generics.UpdateAPIView):
+    """
+    PUT/PATCH: Update a snippet. Returns snippet detail in response.
+    Only the snippet creator can update it.
+    """
+
+    serializer_class = SnippetDetailSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Snippet.objects.filter(created_by=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)

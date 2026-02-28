@@ -57,3 +57,13 @@ class SnippetDetailSerializer(serializers.ModelSerializer):
         tags = self._get_or_create_tags(tags)
         snippet.tags.set(tags)
         return snippet
+
+    def update(self, instance, validated_data):
+        tag_titles = validated_data.pop("tags", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        if tag_titles is not None:
+            tags = self._get_or_create_tags(tag_titles)
+            instance.tags.set(tags)
+        return instance
