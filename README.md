@@ -14,6 +14,37 @@ The following endpoints are available:
 - `GET /api/tags/`: Retrieve a list of all tags.
 - `GET /api/tags/<id>/`: Retrieve a specific tag and all associated snippets.
 
+## Database Schema
+
+The following diagram illustrates the database schema:
+
+```mermaid
+erDiagram
+    User ||--o{ Snippet : "created_by"
+    Snippet }|..|{ Tag : "tags"
+
+    User {
+        int id
+        string username
+        string password
+        string email
+    }
+
+    Snippet {
+        int id
+        string title
+        text note
+        datetime created_at
+        datetime updated_at
+        int created_by_id
+    }
+
+    Tag {
+        int id
+        string title
+    }
+```
+
 ## Setup and Installation
 
 1. **Clone the repository:**
