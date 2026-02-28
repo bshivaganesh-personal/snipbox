@@ -47,6 +47,8 @@ erDiagram
 
 ## Setup and Installation
 
+### Without Docker
+
 1. **Clone the repository:**
 
    ```bash
@@ -92,6 +94,22 @@ erDiagram
    ```bash
    python manage.py runserver
    ```
+
+### With Docker
+
+1. **Build the Docker image:**
+
+   ```bash
+   docker build -t snipbox .
+   ```
+
+2. **Run the Docker container:**
+
+   ```bash
+   docker run -p 8000:8000 snipbox
+   ```
+
+   The application will be accessible at `http://localhost:8000`.
 
 ## Testing with cURL
 
